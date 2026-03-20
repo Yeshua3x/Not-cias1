@@ -1,0 +1,404 @@
+<!DOCTYPE html>
+<html lang="pt-BR" data-theme="dark">
+<head>
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <title>Agora Fato — Brasil & Mundo</title>
+  
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700&family=Playfair+Display:wght@500;700&display=swap" rel="stylesheet">
+
+  <style>
+    :root {
+      --bg: #0f0f11;
+      --bg-card: #16161a;
+      --text: #e0e0e5;
+      --text-soft: #a0a0b0;
+      --accent: #6366f1;
+      --accent-dark: #4f46e5;
+      --border: #27272f;
+    }
+
+    [data-theme="light"] {
+      --bg: #f8f9fc;
+      --bg-card: #ffffff;
+      --text: #1a1a2e;
+      --text-soft: #64748b;
+      --accent: #4f46e5;
+      --accent-dark: #4338ca;
+      --border: #e2e8f0;
+    }
+
+    * {
+      margin: 0;
+      padding: 0;
+      box-sizing: border-box;
+    }
+
+    body {
+      font-family: 'Inter', system-ui, sans-serif;
+      background: var(--bg);
+      color: var(--text);
+      min-height: 100dvh;
+      line-height: 1.6;
+      overflow-x: hidden;
+    }
+
+    header {
+      position: fixed;
+      top: 0;
+      width: 100%;
+      z-index: 1000;
+      padding: 1.1rem 5vw;
+      backdrop-filter: blur(12px);
+      -webkit-backdrop-filter: blur(12px);
+      background: rgba(15,15,17,0.7);
+      border-bottom: 1px solid var(--border);
+      transition: all 0.4s ease;
+    }
+
+    header.scrolled {
+      padding: 0.8rem 5vw;
+      background: rgba(15,15,17,0.92);
+    }
+
+    .logo {
+      font-family: 'Playfair Display', serif;
+      font-size: 1.9rem;
+      font-weight: 700;
+      background: linear-gradient(90deg, var(--accent), #a78bfa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+      letter-spacing: -0.5px;
+    }
+
+    .nav-container {
+      display: flex;
+      justify-content: space-between;
+      align-items: center;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    /* Hambúrguer */
+    .hamburger {
+      display: none;
+      flex-direction: column;
+      gap: 5px;
+      cursor: pointer;
+      z-index: 1100;
+    }
+
+    .hamburger span {
+      width: 28px;
+      height: 3px;
+      background: var(--text);
+      border-radius: 2px;
+      transition: all 0.35s cubic-bezier(0.19, 1, 0.22, 1);
+      transform-origin: right center;
+    }
+
+    .hamburger.active span:nth-child(1) {
+      transform: rotate(-45deg) translate(-4px, 6px);
+    }
+
+    .hamburger.active span:nth-child(2) {
+      opacity: 0;
+      width: 0;
+    }
+
+    .hamburger.active span:nth-child(3) {
+      transform: rotate(45deg) translate(-4px, -6px);
+    }
+
+    .nav-menu {
+      display: flex;
+      gap: 2.8rem;
+      font-weight: 500;
+    }
+
+    .nav-menu a {
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: all 0.3s ease;
+      position: relative;
+      font-size: 1.05rem;
+    }
+
+    .nav-menu a::after {
+      content: '';
+      position: absolute;
+      width: 0;
+      height: 2px;
+      bottom: -6px;
+      left: 0;
+      background: var(--accent);
+      transition: width 0.35s ease;
+    }
+
+    .nav-menu a:hover,
+    .nav-menu a.active {
+      color: white;
+    }
+
+    .nav-menu a:hover::after,
+    .nav-menu a.active::after {
+      width: 100%;
+    }
+
+    /* Mobile Menu */
+    .mobile-menu {
+      position: fixed;
+      inset: 0;
+      background: var(--bg);
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      gap: 3.5rem;
+      transform: translateX(100%);
+      transition: transform 0.55s cubic-bezier(0.16, 1, 0.3, 1);
+      z-index: 999;
+    }
+
+    .mobile-menu.active {
+      transform: translateX(0);
+    }
+
+    .mobile-menu a {
+      font-size: 2.1rem;
+      font-weight: 600;
+      color: var(--text-soft);
+      text-decoration: none;
+      transition: all 0.4s ease;
+    }
+
+    .mobile-menu a:hover {
+      color: var(--accent);
+      transform: translateX(12px);
+    }
+
+    main {
+      padding-top: 140px;
+      padding-inline: 5vw;
+      max-width: 1400px;
+      margin: 0 auto;
+    }
+
+    .hero {
+      text-align: center;
+      padding: 4rem 0 7rem;
+    }
+
+    .hero h1 {
+      font-family: 'Playfair Display', serif;
+      font-size: clamp(3.2rem, 8vw, 7.5rem);
+      line-height: 0.92;
+      margin-bottom: 1.5rem;
+      background: linear-gradient(90deg, #c084fc, var(--accent), #60a5fa);
+      -webkit-background-clip: text;
+      -webkit-text-fill-color: transparent;
+    }
+
+    .hero p {
+      font-size: 1.4rem;
+      color: var(--text-soft);
+      max-width: 680px;
+      margin: 0 auto 3rem;
+    }
+
+    .theme-toggle {
+      background: none;
+      border: none;
+      color: var(--text-soft);
+      font-size: 1.4rem;
+      cursor: pointer;
+      transition: all 0.3s;
+    }
+
+    .theme-toggle:hover {
+      color: var(--accent);
+      transform: scale(1.15);
+    }
+
+    .cards {
+      display: grid;
+      grid-template-columns: repeat(auto-fit, minmax(340px, 1fr));
+      gap: 2rem;
+      margin-top: 4rem;
+    }
+
+    .card {
+      background: var(--bg-card);
+      border: 1px solid var(--border);
+      border-radius: 16px;
+      overflow: hidden;
+      transition: all 0.35s ease;
+      backdrop-filter: blur(6px);
+    }
+
+    .card:hover {
+      transform: translateY(-12px);
+      border-color: var(--accent);
+      box-shadow: 0 30px 60px -20px rgba(99, 102, 241, 0.18);
+    }
+
+    .card img {
+      width: 100%;
+      height: 200px;
+      object-fit: cover;
+      border-bottom: 1px solid var(--border);
+    }
+
+    .card-content {
+      padding: 1.8rem;
+    }
+
+    .card-category {
+      color: var(--accent);
+      font-size: 0.9rem;
+      font-weight: 600;
+      text-transform: uppercase;
+      letter-spacing: 1px;
+      margin-bottom: 0.8rem;
+    }
+
+    .card h3 {
+      font-size: 1.35rem;
+      margin-bottom: 1rem;
+      line-height: 1.3;
+    }
+
+    .card p {
+      color: var(--text-soft);
+      font-size: 0.98rem;
+    }
+
+    @media (max-width: 980px) {
+      .nav-menu        { display: none; }
+      .hamburger       { display: flex; }
+      .theme-toggle    { margin-left: auto; margin-right: 1.5rem; }
+    }
+
+    @media (max-width: 480px) {
+      header           { padding: 1rem 6vw; }
+      .hero            { padding: 3rem 0 5rem; }
+      .hero h1         { font-size: clamp(2.8rem, 12vw, 5.8rem); }
+    }
+  </style>
+</head>
+<body>
+
+<header>
+  <div class="nav-container">
+    <div class="logo">Agora Fato</div>
+    
+    <nav class="nav-menu">
+      <a href="#" class="active">Destaques</a>
+      <a href="#">Brasil</a>
+      <a href="#">Mundo</a>
+      <a href="#">Economia</a>
+      <a href="#">Ciência</a>
+      <a href="#">Política</a>
+    </nav>
+
+    <button class="theme-toggle" aria-label="Alternar tema">☀️</button>
+
+    <div class="hamburger">
+      <span></span>
+      <span></span>
+      <span></span>
+    </div>
+  </div>
+</header>
+
+<div class="mobile-menu">
+  <a href="#">Destaques</a>
+  <a href="#">Brasil</a>
+  <a href="#">Mundo</a>
+  <a href="#">Economia</a>
+  <a href="#">Ciência</a>
+  <a href="#">Política</a>
+</div>
+
+<main>
+  <section class="hero">
+    <h1>Os fatos.<br>sem ruído.</h1>
+    <p>Principais notícias e acontecimentos relevantes do Brasil e do mundo — atualizado em tempo real.</p>
+  </section>
+
+  <section class="cards">
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=800" alt="Notícia destaque">
+      <div class="card-content">
+        <div class="card-category">BRASIL</div>
+        <h3>Plenário aprova nova regra fiscal com teto de crescimento real de 2,5% ao ano</h3>
+        <p>Texto-base foi aprovado na Câmara; oposição promete recorrer ao STF...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1529107386315-bec2f5c50b51?auto=format&fit=crop&q=80&w=800" alt="Notícia internacional">
+      <div class="card-content">
+        <div class="card-category">MUNDO</div>
+        <h3>Conflito no Leste Europeu entra em nova fase crítica após avanço rápido</h3>
+        <p>Ucrânia confirma retirada estratégica de três cidades-chave...</p>
+      </div>
+    </div>
+
+    <div class="card">
+      <img src="https://images.unsplash.com/photo-1611974789855-9c2a0a7236a3?auto=format&fit=crop&q=80&w=800" alt="Economia">
+      <div class="card-content">
+        <div class="card-category">ECONOMIA</div>
+        <h3>Bitcoin ultrapassa US$ 108 mil pela primeira vez na história</h3>
+        <p>Mercado cripto vive euforia após aprovação de novos ETFs institucionais...</p>
+      </div>
+    </div>
+  </section>
+</main>
+
+<script>
+  // Hambúrguer
+  const ham = document.querySelector('.hamburger');
+  const menu = document.querySelector('.mobile-menu');
+
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('active');
+    menu.classList.toggle('active');
+  });
+
+  // Fechar menu ao clicar em link
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      ham.classList.remove('active');
+      menu.classList.remove('active');
+    });
+  });
+
+  // Scroll effect no header
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    const current = window.scrollY;
+
+    if (current > lastScroll && current > 80) {
+      header.classList.add('scrolled');
+    } else if (current < lastScroll) {
+      header.classList.remove('scrolled');
+    }
+    lastScroll = current;
+  });
+
+  // Tema claro/escuro
+  const toggle = document.querySelector('.theme-toggle');
+  toggle.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    toggle.textContent = isDark ? '☀️' : '🌙';
+  });
+</script>
+</body>
+</html>
