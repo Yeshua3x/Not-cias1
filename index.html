@@ -286,95 +286,6 @@
       .hero            { padding: 3rem 0 5rem; }
       .hero h1         { font-size: clamp(2.8rem, 12vw, 5.8rem); }
     }
-
-    /* Scroll reveal */
-.reveal {
-  opacity: 0;
-  transform: translateY(35px);
-  transition: all 0.7s cubic-bezier(0.215, 0.61, 0.355, 1);
-}
-
-.reveal.active {
-  opacity: 1;
-  transform: translateY(0);
-}
-
-/* Skeleton loading */
-.skeleton {
-  background: linear-gradient(90deg, #222 25%, #333 50%, #222 75%);
-  background-size: 200% 100%;
-  animation: skeleton-loading 1.5s infinite;
-}
-
-@keyframes skeleton-loading {
-  0%   { background-position: 200% 0; }
-  100% { background-position: -200% 0; }
-}
-
-.skeleton-card {
-  border: 1px solid var(--border);
-  border-radius: 16px;
-  overflow: hidden;
-  height: 420px; /* ajuste conforme seu card */
-}
-
-.skeleton-img { height: 200px; }
-.skeleton-text  { height: 1.4rem; margin: 1rem 1.8rem; border-radius: 6px; }
-.skeleton-text.short { width: 60%; }
-
-/* Back to top */
-.back-to-top {
-  position: fixed;
-  bottom: 30px;
-  right: 30px;
-  background: var(--accent);
-  color: white;
-  width: 50px;
-  height: 50px;
-  border-radius: 50%;
-  display: flex;
-  align-items: center;
-  justify-content: center;
-  font-size: 1.5rem;
-  opacity: 0;
-  visibility: hidden;
-  transition: all 0.4s ease;
-  box-shadow: 0 6px 20px rgba(99,102,241,0.3);
-  z-index: 900;
-  cursor: pointer;
-}
-
-.back-to-top.show {
-  opacity: 1;
-  visibility: visible;
-}
-
-/* Tabs */
-.tabs {
-  display: flex;
-  gap: 1.2rem;
-  margin: 3rem 0 2rem;
-  flex-wrap: wrap;
-  justify-content: center;
-}
-
-.tab {
-  padding: 0.8rem 1.8rem;
-  border-radius: 50px;
-  background: var(--bg-card);
-  border: 1px solid var(--border);
-  color: var(--text-soft);
-  cursor: pointer;
-  font-weight: 500;
-  transition: all 0.3s ease;
-}
-
-.tab.active,
-.tab:hover {
-  background: var(--accent);
-  color: white;
-  border-color: var(--accent);
-}
   </style>
 </head>
 <body>
@@ -417,10 +328,6 @@
     <p>Principais notícias e acontecimentos relevantes do Brasil e do mundo — atualizado em tempo real.</p>
   </section>
 
-  
-
-
-  
   <section class="cards">
     <div class="card">
       <img src="https://images.unsplash.com/photo-1504711434969-e33886168f5c?auto=format&fit=crop&q=80&w=800" alt="Notícia destaque">
@@ -452,155 +359,46 @@
 </main>
 
 <script>
-  <script>
-// Hambúrguer (mantém o que já tinha)
-const ham = document.querySelector('.hamburger');
-const menu = document.querySelector('.mobile-menu');
-ham.addEventListener('click', () => {
-  ham.classList.toggle('active');
-  menu.classList.toggle('active');
-});
-document.querySelectorAll('.mobile-menu a').forEach(link => {
-  link.addEventListener('click', () => {
-    ham.classList.remove('active');
-    menu.classList.remove('active');
+  // Hambúrguer
+  const ham = document.querySelector('.hamburger');
+  const menu = document.querySelector('.mobile-menu');
+
+  ham.addEventListener('click', () => {
+    ham.classList.toggle('active');
+    menu.classList.toggle('active');
   });
-});
 
-// Header scroll
-let lastScroll = 0;
-window.addEventListener('scroll', () => {
-  const header = document.querySelector('header');
-  if (window.scrollY > 80) {
-    header.classList.add('scrolled');
-  } else {
-    header.classList.remove('scrolled');
-  }
-  lastScroll = window.scrollY;
-});
-
-// Tema (mantém)
-const toggle = document.querySelector('.theme-toggle');
-toggle.addEventListener('click', () => {
-  const html = document.documentElement;
-  const isDark = html.getAttribute('data-theme') === 'dark';
-  html.setAttribute('data-theme', isDark ? 'light' : 'dark');
-  toggle.textContent = isDark ? '☀️' : '🌙';
-});
-
-// Scroll Reveal
-const reveals = document.querySelectorAll('.card');
-const observer = new IntersectionObserver(entries => {
-  entries.forEach(entry => {
-    if (entry.isIntersecting) {
-      entry.target.classList.add('active');
-    }
-  });
-}, { threshold: 0.15 });
-
-reveals.forEach(card => {
-  card.classList.add('reveal');
-  observer.observe(card);
-});
-
-// Tabs / Filtro de categoria (simples)
-const tabs = document.querySelectorAll('.tab');
-const allCards = document.querySelectorAll('.card');
-
-tabs.forEach(tab => {
-  tab.addEventListener('click', () => {
-    tabs.forEach(t => t.classList.remove('active'));
-    tab.classList.add('active');
-
-    const category = tab.getAttribute('data-category');
-
-    allCards.forEach(card => {
-      if (category === 'all' || card.getAttribute('data-category') === category) {
-        card.style.display = 'block';
-        setTimeout(() => card.style.opacity = '1', 100);
-      } else {
-        card.style.opacity = '0';
-        setTimeout(() => card.style.display = 'none', 400);
-      }
+  // Fechar menu ao clicar em link
+  document.querySelectorAll('.mobile-menu a').forEach(link => {
+    link.addEventListener('click', () => {
+      ham.classList.remove('active');
+      menu.classList.remove('active');
     });
   });
-});
 
-// Infinite Scroll (simulado – carrega mais cards fake)
-let page = 1;
-const cardsContainer = document.querySelector('.cards');
+  // Scroll effect no header
+  let lastScroll = 0;
+  window.addEventListener('scroll', () => {
+    const header = document.querySelector('header');
+    const current = window.scrollY;
 
-window.addEventListener('scroll', () => {
-  if (window.innerHeight + window.scrollY >= document.body.offsetHeight - 400) {
-    if (page < 4) { // limite para não exagerar no exemplo
-      page++;
-      loadMoreCards();
+    if (current > lastScroll && current > 80) {
+      header.classList.add('scrolled');
+    } else if (current < lastScroll) {
+      header.classList.remove('scrolled');
     }
-  }
-});
+    lastScroll = current;
+  });
 
-function loadMoreCards() {
-  const loading = document.createElement('div');
-  loading.className = 'skeleton-card';
-  loading.innerHTML = `
-    <div class="skeleton skeleton-img"></div>
-    <div class="card-content">
-      <div class="skeleton skeleton-text"></div>
-      <div class="skeleton skeleton-text"></div>
-      <div class="skeleton skeleton-text short"></div>
-    </div>
-  `;
-  cardsContainer.appendChild(loading);
-
-  setTimeout(() => {
-    loading.remove();
-    const newCardsHTML = `
-      <div class="card reveal" data-category="brasil">
-        <img src="https://images.unsplash.com/photo-1517336714731-489689fd1ca8?auto=format&fit=crop&q=80&w=800" alt="Tech">
-        <div class="card-content">
-          <div class="card-category">BRASIL</div>
-          <h3>IA generativa brasileira ganha investimento recorde de R$ 2,8 bi</h3>
-          <p>Startup de São Paulo fecha rodada Série B liderada por fundos internacionais...</p>
-        </div>
-      </div>
-
-      <div class="card reveal" data-category="mundo">
-        <img src="https://images.unsplash.com/photo-1503387762-592deb58caa5?auto=format&fit=crop&q=80&w=800" alt="Clima">
-        <div class="card-content">
-          <div class="card-category">MUNDO</div>
-          <h3>Acordo climático de 2026: metas mais rígidas para 2040</h3>
-          <p>Países do G20 assinam pacto histórico em Cúpula de Bali...</p>
-        </div>
-      </div>
-    `;
-
-    cardsContainer.insertAdjacentHTML('beforeend', newCardsHTML);
-
-    // Re-observar novos cards
-    document.querySelectorAll('.card:not(.active)').forEach(card => {
-      observer.observe(card);
-    });
-  }, 1200);
-}
-
-// Back to top
-const backToTop = document.createElement('div');
-backToTop.className = 'back-to-top';
-backToTop.innerHTML = '↑';
-document.body.appendChild(backToTop);
-
-backToTop.addEventListener('click', () => {
-  window.scrollTo({ top: 0, behavior: 'smooth' });
-});
-
-window.addEventListener('scroll', () => {
-  if (window.scrollY > 500) {
-    backToTop.classList.add('show');
-  } else {
-    backToTop.classList.remove('show');
-  }
-});
-</script>
+  // Tema claro/escuro
+  const toggle = document.querySelector('.theme-toggle');
+  toggle.addEventListener('click', () => {
+    const html = document.documentElement;
+    const isDark = html.getAttribute('data-theme') === 'dark';
+    
+    html.setAttribute('data-theme', isDark ? 'light' : 'dark');
+    toggle.textContent = isDark ? '☀️' : '🌙';
+  });
 </script>
 </body>
 </html>
